@@ -1,0 +1,28 @@
+# core
+python-dateutil
+pytz
+pyyaml
+jinja2
+weasyprint==59.0
+requests
+python-dotenv
+
+# nlp
+spacy==3.7.2
+sentence-transformers==2.2.2
+transformers==4.35.0
+torch==2.1.0+cpu  # use +cpu for GitHub runner
+fasttext==0.9.2
+langdetect==1.0.9
+
+# telegram
+telethon==1.29.3
+
+# rss
+feedparser==6.0.10
+
+# pdf
+pypdf2==3.0.1
+
+# email
+sendgrid==6.10.0
