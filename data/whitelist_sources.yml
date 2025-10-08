@@ -1,0 +1,7 @@
+rss:
+  - url: https://www.interpol.int/News-and-Events/News/RSS
+    tier: A
+  - url: https://www.europol.europa.eu/rss
+    tier: A
+  - url: https://issafrica.org/rss
+    tier: B
