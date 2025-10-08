@@ -25,4 +25,4 @@ feedparser==6.0.10
 pypdf2==3.0.1
 
 # email
-sendgrid==6.10.0
+python-dotenv
