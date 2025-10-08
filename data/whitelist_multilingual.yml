@@ -1,0 +1,19 @@
+feeds:
+  - url: https://arabic.cnn.com/services/rss/
+    lang: ar
+    tier: B
+  - url: https://www.rfi.fr/afrique/rss
+    lang: fr
+    tier: A
+  - url: https://www.dw.com/rss/ar/
+    lang: ar
+    tier: A
+  - url: https://www.trt.net.tr/rss.aspx?category=afrika
+    lang: tr
+    tier: B
+  - url: https://swahili.rti.tw/rss
+    lang: sw
+    tier: B
+  - url: https://www.fana bc.com/index.php/english/news/feed
+    lang: en
+    tier: A
