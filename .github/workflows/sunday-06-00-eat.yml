@@ -17,7 +17,8 @@ jobs:
           python -m spacy download xx_ent_wiki_sm
       - name: Run
         env:
-          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
           SENTINEL_API_KEY: ${{ secrets.SENTINEL_API_KEY }}
           TELEGRAM_API_ID: ${{ secrets.TELEGRAM_API_ID }}
