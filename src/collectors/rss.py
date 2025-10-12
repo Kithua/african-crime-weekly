@@ -9,7 +9,10 @@ def fetch(start: dt.datetime, end: dt.datetime):
         try:
             feed = feedparser.parse(w["url"])
             for entry in feed.entries:
-                pub = dt.datetime(*entry.published_parsed[:6], tzinfo=pytz.UTC)
+                try:
+                    pub = dt.datetime(*entry.published_parsed[:6], tzinfo=pytz.UTC)
+                except (AttributeError, TypeError):
+                    continue          # skip entries without usable date
                 if start <= pub <= end:
                     rows.append({"title": entry.title,
                                  "summary": entry.summary,
