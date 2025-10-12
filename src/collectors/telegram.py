@@ -3,6 +3,7 @@ Telethon-based public-channel collector.
 Only whitelisted channels; no media auto-download.
 """
 import os, yaml, datetime as dt, pytz, asyncio
+from telethon.sessions import StringSession
 from telethon import TelegramClient
 from pathlib import Path
 
