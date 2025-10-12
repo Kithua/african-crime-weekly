@@ -14,6 +14,6 @@ feeds:
   - url: https://swahili.rti.tw/rss
     lang: sw
     tier: B
-  - url: https://www.fana bc.com/index.php/english/news/feed
+   - url: https://www.fanabc.com/index.php/english/news/feed
     lang: en
     tier: A
