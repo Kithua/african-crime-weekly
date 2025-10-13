@@ -33,10 +33,12 @@ def main():
     items = geotag.keep_africa(items)
     items = dedup.remove_duplicates(items)
     buckets = classifier.split_four_pillars(items)
+    pdfs = []
     for pillar in buckets:
         report = uk_intel_style.build(buckets[pillar], pillar, start, end)
         outfile = pdf.render(report, pillar, start)
-        email.send(outfile)
+        pdfs.append(outfile)
+    email.send(pdfs)          # <-- one call, one e-mail
     log.info("Done")
 
 if __name__ == "__main__":
