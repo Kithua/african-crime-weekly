@@ -6,7 +6,14 @@ def fetch(start, end):
         for entry in feedparser.parse(w["url"]).entries:
             pub = dt.datetime(*entry.published_parsed[:6], tzinfo=pytz.UTC)
             if start <= pub <= end:
-                rows.append({"title": entry.title, "summary": entry.summary,
-                             "link": entry.link, "date": pub.isoformat(),
-                             "source": w["url"], "tier": w["tier"], "lang": w["lang"]})
+                rows.append({
+                            "title": entry.title,
+                            "summary": entry.summary,
+                            "link": entry.link,
+                            "date": pub.isoformat(),
+                            "source": w["url"],
+                            "tier": w["tier"],
+                            "lang": w["lang"],
+                            "intel_sentence": f"Non-English reporting on {w['lang']} language outlets regarding African security issues."
+                        })
     return rows
