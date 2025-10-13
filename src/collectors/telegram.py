@@ -22,14 +22,15 @@ async def _fetch_since(start: dt.datetime):
             async for msg in client.iter_messages(entity, offset_date=start, reverse=True):
                 if msg.message and msg.date >= start:
                     rows.append({
-                        "title": msg.message[:100],
-                        "summary": msg.message,
-                        "link": f"https://t.me/{ch['username']}/{msg.id}",
-                        "date": msg.date.isoformat(),
-                        "source": f"telegram/{ch['username']}",
-                        "tier": "B",
-                        "lang": "auto"
-                    })
+                                "title": msg.text[:100],
+                                "summary": msg.text,
+                                "link": f"https://t.me/{ch['username']}/{msg.id}",
+                                "date": msg.date.isoformat(),
+                                "source": f"telegram/{ch['username']}",
+                                "tier": "B",
+                                "lang": "auto",
+                                "intel_sentence": "Channel discusses African cyber-crime tools and tactics; potential TTP indicator."
+                            })
         except Exception as e:
             print("Telegram skip", ch, e)
     await client.disconnect()
