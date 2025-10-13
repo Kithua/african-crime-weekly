@@ -1,19 +1,18 @@
-"""
-Zero-shot classifier stub.
-Returns hard-coded buckets until real impl. added.
-"""
+import re
+
+# pillar-specific keywords
+KEYWORDS = {
+    "terrorism": {"terror", "al-shabaab", "boko haram", "isis", "jihad", "extrem", "attack", "bomb", "suicide", "kidnap", "ransom"},
+    "organised": {"drug", "cocaine", "heroin", "traffick", "smuggl", "mafia", "cartel", "mine illegal", "arms", "weapon", "border", "port", "customs"},
+    "financial": {"money launder", "bitcoin", "usdt", "fraud", "scam", "ponzi", "pyramid", "ofac", "sanction", "vat", "tax evasion", "forex", "investment scam", "business email"},
+    "cyber": {"ransomware", "phish", "malware", "hack", "breach", "ddos", "botnet", "zero-day", "exploit", "darkweb", "onion", "c&c", "trojan", "worm", "caffeine", "mrxcoder"}
+}
+
 def split_four_pillars(items):
-    buckets = {"terrorism": [], "organised": [], "financial": [], "cyber": []}
+    buckets = {p: [] for p in KEYWORDS}
     for it in items:
-        text = (it.get("title","")+" "+it.get("summary","")).lower()
-        if any(k in text for k in ("terror","extrem","boko haram","al-shabaab","jihad","isis")):
-            buckets["terrorism"].append(it)
-        elif any(k in text for k in ("drug","traffick","cocaine","heroin","smuggl","mafia","cartel")):
-            buckets["organised"].append(it)
-        elif any(k in text for k in ("money launder","bitcoin","scam","fraud","sanctions","ofac")):
-            buckets["financial"].append(it)
-        elif any(k in text for k in ("cyber","hack","ransom","phish","malware")):
-            buckets["cyber"].append(it)
-        else:
-            buckets["cyber"].append(it)   # default bucket for now
+        txt = (it.get("title", "") + " " + it.get("summary", "")).lower()
+        scores = {p: len(kw & set(re.split(r"\W+", txt))) for p, kw in KEYWORDS.items()}
+        best = max(scores, key=scores.get) if max(scores.values()) else "cyber"
+        buckets[best].append(it)
     return buckets
