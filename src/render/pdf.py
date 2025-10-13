@@ -1,7 +1,51 @@
-from weasyprint import HTML
-import datetime as dt, pathlib as pl
+from weasyprint import HTML, CSS
+from pathlib import Path
+import datetime as dt
 
-def render(html: str, pillar: str, start: dt.datetime):
-    outfile = pl.Path(f"{start.strftime('%Y-W%U')}-{pillar}.pdf")
-    HTML(string=f"<h1>{pillar}</h1><pre>{html}</pre>").write_pdf(outfile)
+# --- A4 UK-Intel house style -----------------------------------------------
+A4_CSS = """
+@page {
+    size: A4;
+    margin: 2cm 2cm 2.5cm 2cm;          /* top right bottom left */
+    @top-center { content: "ACW – " string(week) " – TLP:WHITE"; font-size: 9pt; color: #555; }
+    @bottom-right { content: "Page " counter(page) " of " counter(pages); font-size: 9pt; color: #555; }
+}
+
+body {
+    font-family: Arial Narrow, Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.15;
+    text-align: justify;
+}
+
+h1, h2, h3 { page-break-after: avoid; margin-top: 12pt; margin-bottom: 6pt; }
+.exec-summary, .gaps, .recs, .sources { page-break-before: always; }
+
+.sources table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12pt;
+}
+.sources th, .sources td {
+    border: 1pt solid #ccc;
+    padding: 4pt 6pt;
+    font-size: 9pt;
+}
+.disclaimer {
+    font-size: 9pt;
+    font-style: italic;
+    text-align: center;
+    margin-top: 24pt;
+}
+"""
+
+# ---------------------------------------------------------------------------
+def render(html: str, pillar: str, start: dt.datetime) -> Path:
+    week_str = start.strftime('%Y-W%U')
+    outfile = Path(f"{week_str}-{pillar}.pdf")
+
+    # Inject the week string into the HTML so the running header can read it
+    html = f'<style>{A4_CSS}</style><div style="string-set: week {week_str}">{html}</div>'
+
+    HTML(string=html).write_pdf(outfile, stylesheets=[CSS(string=A4_CSS)])
     return outfile
