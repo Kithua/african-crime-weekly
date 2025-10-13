@@ -1,13 +1,14 @@
 from datetime import datetime
 from jinja2 import Template
 
-TMPL = """
+CSS_HTML_TMPL = """
 <style>
 @page {
     size: A4;
     margin: 2cm 2cm 2.5cm 2cm;
-    @top-center { content: "ACW – " string(week) " – TLP:WHITE"; font-size: 9pt; color: #555; }
-    @bottom-right { content: "Page " counter(page) " of " counter(pages); font-size: 9pt; color: #555; }
+    @top-left    { content: "TLP:WHITE"; font-size: 9pt; color: #555; }
+    @top-center  { content: "ACW – {{ week }} – {{ pillar|upper }}"; font-size: 9pt; color: #555; }
+    @bottom-right{ content: "Page " counter(page) " of " counter(pages); font-size: 9pt; color: #555; }
 }
 body {
     font-family: Arial Narrow, Arial, sans-serif;
@@ -15,14 +16,8 @@ body {
     line-height: 1.15;
     text-align: justify;
 }
-h1, h2, h3 {
-    page-break-after: avoid;
-    margin-top: 12pt;
-    margin-bottom: 6pt;
-}
-.exec-summary, .gaps, .recs, .sources {
-    page-break-before: always;
-}
+h1, h2, h3 { page-break-after: avoid; margin: 12pt 0 6pt 0; }
+.exec-summary, .gaps, .recs, .sources { page-break-before: always; }
 .sources table {
     width: 100%;
     border-collapse: collapse;
@@ -81,8 +76,8 @@ No open-source items met reliability thresholds this week.
 {% if pillar == "cyber" %}
 ## TECHNICAL INDICATORS (STIX)
 <div class="ioc-box">
-**Wallet:** 0x9522…e5 (ETH) | **IP:** 154.179.249.29 (Cairo, EG)<br>
-**Malware:** Caffeine-phishing kit | **Hash:** d41d8cd98f00b204e9800998ecf8427e
+**Wallet:** {{ wallet or "0x9522…e5" }} (ETH) | **IP:** {{ ip or "154.179.249.29" }} (Cairo, EG)<br>
+**Malware:** {{ malware or "Caffeine-phishing kit" }} | **Hash:** {{ hash or "d41d8cd98f00b204e9800998ecf8427e" }}
 </div>
 {% endif %}
 
@@ -113,6 +108,7 @@ Disclaimer: This product is compiled from open-source material only and does not
 """
 
 def build(items, pillar, start, end):
-    t = Template(TMPL)
-    return t.render(items=items, pillar=pillar, week=start.strftime('%Y-W%U'),
+    t = Template(CSS_HTML_TMPL)
+    return t.render(items=items, pillar=pillar,
+                    week=start.strftime('%Y-W%U'),
                     start=start.date(), end=end.date())
