@@ -2,9 +2,9 @@ import os, smtplib, ssl
 from email.message import EmailMessage
 from pathlib import Path
 
-GMAIL_USER = os.getenv("evanskithua@gmail.com")          # youraddress@gmail.com
-GMAIL_PASS = os.getenv("qlnj qcbd kwca leqh")  # 16-char app password
-RECIPIENT   = os.getenv("KithuaE@AfricanUnion.org")
+GMAIL_USER = os.getenv("GMAIL_USER")
+GMAIL_PASS = os.getenv("GMAIL_APP_PASSWORD")
+RECIPIENT  = os.getenv("EMAIL_TO")
 
 def send(pdf_path: Path):
     msg = EmailMessage()
