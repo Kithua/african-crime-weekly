@@ -10,7 +10,9 @@ Executive Summary
 =================
 {% if items %}
   {% for i in items %}
-- {{ i.title }} ({{ i.source }})
+  - **{{ i.title }}**  
+    *Intel value:* {{ i.intel_sentence }}  
+    ({{ i.source }})
   {% endfor %}
 {% else %}
 No open-source items met reliability thresholds this week.
