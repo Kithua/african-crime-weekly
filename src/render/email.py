@@ -4,7 +4,7 @@ from pathlib import Path
 
 GMAIL_USER = os.getenv("evanskithua@gmail.com")          # youraddress@gmail.com
 GMAIL_PASS = os.getenv("qlnj qcbd kwca leqh")  # 16-char app password
-RECIPIENT   = os.getenv("EMAIL_TO")
+RECIPIENT   = os.getenv("KithuaE@AfricanUnion.org")
 
 def send(pdf_path: Path):
     msg = EmailMessage()
@@ -19,6 +19,7 @@ def send(pdf_path: Path):
 
     context = ssl.create_default_context()
     with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+        print("DEBUG: user=", repr(GMAIL_USER), "pwd=", repr(GMAIL_PASS and len(GMAIL_PASS)))
         server.login(GMAIL_USER, GMAIL_PASS)
         server.send_message(msg)
     print(f"E-mailed {pdf_path.name} to {RECIPIENT}")
