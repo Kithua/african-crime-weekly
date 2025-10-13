@@ -14,12 +14,17 @@ def fetch(start: dt.datetime, end: dt.datetime):
                 except (AttributeError, TypeError):
                     continue          # skip entries without usable date
                 if start <= pub <= end:
-                    rows.append({"title": entry.title,
-                                 "summary": entry.summary,
-                                 "link": entry.link,
-                                 "date": pub.isoformat(),
-                                 "source": w["url"],
-                                 "tier": w.get("tier","B")})
+                    rows.append({
+                                "title": entry.title,
+                                "summary": entry.summary,
+                                "link": entry.link,
+                                "date": pub.isoformat(),
+                                "source": w["url"],
+                                "tier": w.get("tier", "B"),
+                                "lang": "en",
+                                # ↓  one-line intel value ↓
+                                "intel_sentence": f"Provides insight into {w.get('pillar', 'general')} developments in {w.get('country', 'Africa')}."
+                            })
         except Exception as e:
             print("RSS fail", w["url"], e)
     return rows
