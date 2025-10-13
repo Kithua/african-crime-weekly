@@ -48,13 +48,13 @@ def fetch_weekly_africa():
         african = [l for l in labels if l.upper() in AFRICA_ISO3]
         if african:
             out.append({
-                "title": f"Sentinel ICF – {obj['x_pattern_value']}",
-                "summary": obj.get("description", "No description"),
-                "link": obj.get("external_references", [{}])[0].get("url", "https://portal.sentinelprotocol.io"),
-                "date": obj.get("created", start.isoformat()),
-                "source": "sentinel-icf-v2",
-                "tier": "A",
-                "lang": "en",
-                "stix_object": obj
-            })
+                        "title": h.get("title", "No title"),
+                        "summary": h.get("description", ""),
+                        "link": f"https://portal.sentinelprotocol.io/report/{h['id']}",
+                        "date": h.get("published", start.isoformat()),
+                        "source": "sentinel-icf-v2",
+                        "tier": "A",
+                        "lang": "en",
+                        "intel_sentence": f"Crypto-address {h['x_pattern_value']} flagged for {h.get('x_security_category', 'suspicious activity')} in {country}."
+                    })
     return out
