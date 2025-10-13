@@ -22,7 +22,8 @@ def collect(start, end):
     log.info("Collect Telegram")
     items.extend(telegram.fetch_since(start))
     log.info("Collect Sportal")
-    items.extend(api_sportal.fetch_weekly_africa())
+    sentinel_items, sentinel_iocs = api_sportal.fetch_weekly_africa()
+    items.extend(sentinel_items)
     log.info("Collect multilingual")
     items.extend(multilingual.fetch(start, end))
     return items
@@ -35,7 +36,11 @@ def main():
     buckets = classifier.split_four_pillars(items)
     pdfs = []
     for pillar in buckets:
-        report = uk_intel_style.build(buckets[pillar], pillar, start, end)
+        report = uk_intel_style.build(buckets[pillar], pillar, start, end,
+                                  wallet=sentinel_iocs.get("wallet"),
+                                  ip=sentinel_iocs.get("ip"),
+                                  malware=sentinel_iocs.get("malware"),
+                                  hash=sentinel_iocs.get("hash"))
         outfile = pdf.render(report, pillar, start)
         pdfs.append(outfile)
     email.send(pdfs)          # <-- one call, one e-mail
