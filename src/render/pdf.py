@@ -48,4 +48,13 @@ def render(html: str, pillar: str, start: dt.datetime) -> Path:
     html = f'<style>{A4_CSS}</style><div style="string-set: week {week_str}">{html}</div>'
 
     HTML(string=html).write_pdf(outfile, stylesheets=[CSS(string=A4_CSS)])
+    # inside pdf.py  –  add alternative entry point
+    if sys.argv[1] == "weekly":
+        iso_week = datetime.datetime.utcnow().strftime("%G-W%V")
+        with open(f"data/weekly/{iso_week}.json") as f:
+            bundle = json.load(f)
+        html = populate_template("templates/weekly_template.html", bundle)
+        pdf_path = f"data/weekly/{iso_week}.pdf"
+        weasyprint.HTML(string=html).write_pdf(pdf_path)
+        print("Weekly PDF →", pdf_path)
     return outfile
