@@ -17,3 +17,6 @@ feeds:
   - url: https://www.fanabc.com/index.php/english/news/feed
     lang: en
     tier: A
+  - url: https://www.mdn.dz/site_principal/sommaire/revues/revue_el_djeich_an.php   # Algerian military journal
+    lang: ar
+    tier: B
