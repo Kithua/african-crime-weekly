@@ -2,7 +2,7 @@ import os, datetime as dt, pytz, yaml, logging
 from pathlib import Path
 from src.collectors import rss, telegram, api_sportal, multilingual
 from src.nlp import geotag, dedup, classifier
-from src.analyst import uk_intel_style
+from src.analyst import weekly_fusion.py
 from src.render import pdf, email
 
 logging.basicConfig(level=logging.INFO)
