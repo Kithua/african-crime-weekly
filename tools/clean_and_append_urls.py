@@ -1330,18 +1330,23 @@ def url_normalise(url: str) -> str:
     """Lower-case + remove trailing slash for uniqueness."""
     return url.strip().rstrip("/").lower()
 
-def guess_meta(url: str):
-    """Return lang & type heuristics."""
-    u = url.lower()
-    if "/en/" in u or u.endswith("/en") or ".org/en" in u:
-        lang = "en"
-    elif u.endswith("/ar") or "/ar/" in u or ".dz/ar" in u or ".ma/ar" in u:
-        lang = "ar"
-    elif ".ao" in u or ".cv" in u or ".mz" in u:
-        lang = "pt"
-    else:
-        lang = "fr"          # default for francophone Africa
-    return lang
+def def guess_meta(url: str):
+    """Return explicit lang per country block."""
+    url = url.lower()
+    if any(tld in url for tld in (".ao", ".cv", ".mz")):          # lusophone
+        return "pt"
+    if any(tld in url for tld in (".dz", ".ma", ".tn", ".ly")):   # arabophone
+        return "ar"
+    if any(tld in url for tld in (".eg", ".sd", ".so", ".dj")):   # arabic
+        return "ar"
+    if any(tld in url for tld in (".bj", ".bf", ".ci", ".tg", ".ml", ".sn", ".cd", ".cg", ".ga", ".cf", ".td", ".cm", ".gq")):
+        return "fr"
+    if any(tld in url for tld in (".ng", ".gh", ".lr", ".sl", ".gm", ".ke", ".ug", ".tz", ".rw", ".bi", ".mw", ".zm", ".zw", ".bw", ".na", ".sz", ".ls", ".za")):
+        return "en"
+    if any(tld in url for tld in (".et", ".er")):                 # amharic / tigrinya
+        return "am"        # or "en" if you prefer English default
+    # fallback
+    return "en"
 
 def probe(url: str):
     """Return (url, status_ok, reason)."""
