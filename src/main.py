@@ -7,47 +7,55 @@ from src.render import pdf, email
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger("ACW")
 
+
 def week_range():
-    """Return Sunday 00:00 EAT → Saturday 23:59 EAT for last week."""
     today = dt.datetime.now(pytz.timezone("Africa/Nairobi"))
-    last_sat = today - dt.timedelta(days=today.weekday()+2)
+    last_sat = today - dt.timedelta(days=today.weekday() + 2)
     sun = last_sat - dt.timedelta(days=6)
-    start = sun.replace(hour=0,minute=0,second=0,microsecond=0)
-    end   = last_sat.replace(hour=23,minute=59,second=59,microsecond=999999)
+    start = sun.replace(hour=0, minute=0, second=0, microsecond=0)
+    end = last_sat.replace(hour=23, minute=59, second=59, microsecond=999999)
     return start, end
+
 
 def collect(start, end):
     log.info("Collect RSS")
     items = rss.fetch(start, end)
     log.info("Collect Telegram")
     items.extend(telegram.fetch_since(start))
-    log.info("Collect Sportal")
-    # ----- Sentinel Protocol (ICF v2) -----
+    log.info("Collect Sentinel ICF")
     sentinel_items, sentinel_iocs = api_sportal.fetch_weekly_africa()
     items.extend(sentinel_items)
     log.info("Collect multilingual")
-    # ----- multilingual feeds -----
     items.extend(multilingual.fetch(start, end))
-    return items
+    return items, sentinel_iocs
+
 
 def main():
     start, end = week_range()
-    items = collect(start, end)
+    items, sentinel_iocs = collect(start, end)
+
     items = geotag.keep_africa(items)
     items = dedup.remove_duplicates(items)
-     # ----- classify & render -----
     buckets = classifier.split_four_pillars(items)
-    pdfs = []
-    for pillar in buckets:
-        report = uk_intel_style.build(buckets[pillar], pillar, start, end,
-                                      wallet=sentinel_iocs.get("wallet"),
-                                      ip=sentinel_iocs.get("ip"),
-                                      malware=sentinel_iocs.get("malware"),
-                                      hash=sentinel_iocs.get("hash"))
-        outfile = pdf.render(report, pillar, start)
-        pdfs.append(outfile)
-    email.send(pdfs)          # <-- one call, one e-mail
+
+    report = uk_intel_style.build(
+        buckets["terrorism"], buckets["organised"], buckets["financial"], buckets["cyber"],
+        start, end
+    )
+    # pass real IoCs only to cyber section
+    report = report.replace("{{ wallet }}", str(sentinel_iocs.get("wallet")))
+    report = report.replace("{{ ip }}", str(sentinel_iocs.get("ip")))
+    report = report.replace("{{ malware }}", str(sentinel_iocs.get("malware")))
+    report = report.replace("{{ hash }}", str(sentinel_iocs.get("hash")))
+
+    week_str = start.strftime('%Y-W%U')
+    outfile = Path(f"{week_str}-African-Crime-Weekly.pdf")
+    from weasyprint import HTML
+    HTML(string=report).write_pdf(outfile)
+
+    email.send([outfile])   # one e-mail, one PDF
     log.info("Done")
+
 
 if __name__ == "__main__":
     main()
