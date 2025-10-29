@@ -39,7 +39,7 @@ def main():
     items = dedup.remove_duplicates(items)
     buckets = classifier.split_four_pillars(items)
 
-    report = uk_intel_style.build(
+    report = weekly_fusion_intel_style.build(
         buckets["terrorism"], buckets["organised"], buckets["financial"], buckets["cyber"],
         start, end
     )
