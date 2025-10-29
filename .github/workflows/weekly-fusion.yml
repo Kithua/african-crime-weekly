@@ -2,28 +2,50 @@ name: Weekly-Fusion Crime Brief
 
 on:
   schedule:
-    - cron: '0 3 * * 0'          # 03:00 UTC = 06:00 EAT (Sun)
-  workflow_dispatch:             # manual trigger button
+    - cron: '0 3 * * 0'          # 03:00 UTC every Sunday
+  workflow_dispatch:            # manual trigger
 
 jobs:
   weekly-fusion:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      # ---------- 1.  Check out repo  ----------
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
+      # ---------- 2.  Install Python  ----------
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
           cache: 'pip'
 
-      - run: pip install -r requirements.txt
+      # ---------- 3.  Install dependencies  ----------
+      - name: Install Python requirements
+        run: pip install -r requirements.txt
 
+      # ---------- 4.  Collate & analyse  ----------
       - name: Collate & analyse last 6 full days
-        run: python src/analyst/weekly_fusion.py
+        env:
+          GMAIL_USER:                ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASSWORD:        ${{ secrets.GMAIL_APP_PASSWORD }}
+          EMAIL_TO:                  ${{ secrets.EMAIL_TO }}
+          SENTINEL_API_KEY:          ${{ secrets.SENTINEL_API_KEY }}
+          TELEGRAM_API_ID:           ${{ secrets.TELEGRAM_API_ID }}
+          TELEGRAM_API_HASH:         ${{ secrets.TELEGRAM_API_HASH }}
+          TELEGRAM_SESSION_STRING:   ${{ secrets.TELEGRAM_SESSION_STRING }}
+        run: |
+          python src/analyst/weekly_fusion.py
+          python -m src.main
 
+      # ---------- 5.  Render artefacts  ----------
       - name: Render HTML + PDF
-        run: python src/render/pdf.py   # already exists – just points at new HTML
+        run: python src/render/pdf.py
 
+      # ---------- 6.  Mail the report  ----------
       - name: Send e-mail
-        run: python src/render/email.py  # already exists – re-uses same secrets
+        env:
+          GMAIL_USER:         ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          EMAIL_TO:           ${{ secrets.EMAIL_TO }}
+        run: python src/render/email.py
