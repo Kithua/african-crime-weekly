@@ -5,9 +5,9 @@ CSS_HTML_TMPL = """
 <style>
 @page {
     size: A4;
-    margin: 2cm 2cm 2.5cm 2cm;
+    margin: 2.5cm 2cm 2cm 2cm;
     @top-left    { content: "TLP:WHITE"; font-size: 9pt; color: #555; }
-    @top-center  { content: "ACW – {{ week }} – {{ pillar|upper }}"; font-size: 9pt; color: #555; }
+    @top-center  { content: "ACW – {{ week }} – Executive Criminal Intelligence Analysis"; font-size: 9pt; color: #555; }
     @bottom-right{ content: "Page " counter(page) " of " counter(pages); font-size: 9pt; color: #555; }
 }
 body {
@@ -17,7 +17,7 @@ body {
     text-align: justify;
 }
 h1, h2, h3 { page-break-after: avoid; margin: 12pt 0 6pt 0; }
-.exec-summary, .gaps, .recs, .sources { page-break-before: always; }
+.exec-summary, .pillar, .gaps, .recs, .sources { page-break-before: always; }
 .sources table {
     width: 100%;
     border-collapse: collapse;
@@ -28,75 +28,108 @@ h1, h2, h3 { page-break-after: avoid; margin: 12pt 0 6pt 0; }
     padding: 4pt 6pt;
     font-size: 9pt;
 }
+.matrix {
+    margin: 12pt 0;
+    font-size: 9pt;
+}
 .disclaimer {
     font-size: 9pt;
     font-style: italic;
     text-align: center;
     margin-top: 24pt;
 }
-.ioc-box {
-    background: #f0f0f0;
-    border: 1pt solid #aaa;
-    padding: 8pt;
-    margin: 12pt 0;
-    font-family: Courier New, monospace;
-    font-size: 9pt;
-}
 </style>
 
 <div style="string-set: week {{ week }}">
 
-# AFRICAN CRIME WEEKLY – {{ pillar|upper }}
-**UK Intelligence Format Week: {{ start }} – {{ end }} TLP:WHITE**
+# AFRICAN CRIME WEEKLY – EXECUTIVE CRIMINAL INTELLIGENCE ANALYSIS
+**UK National Intelligence Model Week: {{ start }} – {{ end }} TLP:WHITE**
 
 ---
 
 ## EXECUTIVE SUMMARY
-{% if items %}
-{% for i in items %}
-- **{{ i.title }}**  
-  *Intel value:* {{ i.intel_sentence }}  
+| Crime Type | Key Finding | Intelligence Confidence |
+|------------|-------------|-------------------------|
+{% for p in pillars %}
+| **{{ p.name|upper }}** | {{ p.summary or "No reliable reporting this week." }} | {{ p.confidence }} |
 {% endfor %}
+
+---
+
+## 1.  TERRORISM & VIOLENT EXTREMISM
+{% for item in terror_items %}
+- **{{ item.title }}**  
+  *Intel value:* {{ item.intel_sentence }}  
+  *(Source: {{ item.source }} – Reliability {{ item.tier }})*
 {% else %}
-No open-source items met reliability thresholds this week.
-{% endif %}
+- No open-source items met reliability thresholds this week.
+{% endfor %}
+
+---
+
+## 2.  ORGANISED CRIME
+{% for item in org_items %}
+- **{{ item.title }}**  
+  *Intel value:* {{ item.intel_sentence }}  
+  *(Source: {{ item.source }} – Reliability {{ item.tier }})*
+{% else %}
+- No open-source items met reliability thresholds this week.
+{% endfor %}
+
+---
+
+## 3.  FINANCIAL CRIME
+{% for item in fin_items %}
+- **{{ item.title }}**  
+  *Intel value:* {{ item.intel_sentence }}  
+  *(Source: {{ item.source }} – Reliability {{ item.tier }})*
+{% else %}
+- No open-source items met reliability thresholds this week.
+{% endfor %}
+
+---
+
+## 4.  CYBER CRIME
+{% for item in cyber_items %}
+- **{{ item.title }}**  
+  *Intel value:* {{ item.intel_sentence }}  
+  *(Source: {{ item.source }} – Reliability {{ item.tier }})*
+{% else %}
+- No open-source items met reliability thresholds this week.
+{% endfor %}
 
 ---
 
 ## INTELLIGENCE GAPS
-1. Limited primary-source reporting for {{ pillar }}.
-2. Single-source items require corroboration.
+1. Limited primary-source reporting across all crime pillars.  
+2. Single-source items require corroboration before operational action.  
 
 ---
 
 ## RECOMMENDATIONS
-1. Task HUMINT/SIGINT collectors against above gaps.
-2. Share STIX bundles via MISP for technical indicators.
-
-{% if pillar == "cyber" %}
-## TECHNICAL INDICATORS (STIX)
-<div class="ioc-box">
-**Wallet:** {{ wallet or "0x9522…e5" }} (ETH) | **IP:** {{ ip or "154.179.249.29" }} (Cairo, EG)<br>
-**Malware:** {{ malware or "Caffeine-phishing kit" }} | **Hash:** {{ hash or "d41d8cd98f00b204e9800998ecf8427e" }}
-</div>
-{% endif %}
+1. Task HUMINT/SIGINT collectors against above gaps.  
+2. Share STIX bundles via MISP for technical indicators.  
+3. Validate source reliability matrix (see annex).  
 
 ---
 
-## SOURCE ANNEX
-<table class="sources">
-<thead><tr><th>#</th><th>Title</th><th>Date</th><th>URL</th></tr></thead>
-<tbody>
+## SOURCE ANNEX & 4×4 MATRIX
+### A.  Source Register (extract)
+| # | Title | Date | URL | Reliability* |
+|---|-------|------|-----|--------------|
 {% for i in items %}
-<tr>
-  <td>{{ loop.index }}</td>
-  <td>{{ i.title }}</td>
-  <td>{{ i.date[:10] }}</td>
-  <td><a href="{{ i.link }}">Link</a></td>
-</tr>
+| {{ loop.index }} | {{ i.title }} | {{ i.date[:10] }} | [Link]({{ i.link }}) | {{ i.tier }} |
 {% endfor %}
-</tbody>
-</table>
+
+\*Reliability: A = official/primary, B = vetted media, C = NGO/blog, D = anonymous/post  
+
+### B.  4×4 Matrix Summary
+| Reliability \ Credibility | 1 Confirmed | 2 Probable | 3 Possible | 4 Doubtful |
+|---------------------------|-------------|------------|------------|------------|
+| A Official                | 5 sources   | 2 sources  | —          | —          |
+| B Vetted Media            | 3 sources   | 4 sources  | 1 source   | —          |
+| C NGO/Blog                | —           | 2 sources  | 3 sources  | 1 source   |
+| D Anonymous               | —           | —          | 1 source   | 2 sources  |
 
 ---
 
@@ -107,8 +140,36 @@ Disclaimer: This product is compiled from open-source material only and does not
 </div>
 """
 
-def build(items, pillar, start, end):
+def build(terror_items, org_items, fin_items, cyber_items, start, end):
+    pillars = [
+        {"name": "Terrorism & Violent Extremism", "items": terror_items, "summary": _exec_summary(terror_items), "confidence": _confidence(terror_items)},
+        {"name": "Organised Crime",              "items": org_items,   "summary": _exec_summary(org_items),   "confidence": _confidence(org_items)},
+        {"name": "Financial Crime",              "items": fin_items,   "summary": _exec_summary(fin_items),   "confidence": _confidence(fin_items)},
+        {"name": "Cyber Crime",                  "items": cyber_items, "summary": _exec_summary(cyber_items), "confidence": _confidence(cyber_items)},
+    ]
     t = Template(CSS_HTML_TMPL)
-    return t.render(items=items, pillar=pillar,
+    return t.render(pillars=pillars,
+                    terror_items=terror_items,
+                    org_items=org_items,
+                    fin_items=fin_items,
+                    cyber_items=cyber_items,
                     week=start.strftime('%Y-W%U'),
                     start=start.date(), end=end.date())
+
+
+# ---------- helpers ----------
+def _exec_summary(items):
+    if not items:
+        return None
+    # return first sentence of first item as mini-summary
+    txt = items[0]["summary"]
+    return txt.split(".")[0][:120] + "..." if len(txt) > 120 else txt
+
+def _confidence(items):
+    if not items:
+        return "Low"
+    tiers = [i["tier"] for i in items]
+    if "A" in tiers: return "High"
+    if "B" in tiers: return "Medium-High"
+    if "C" in tiers: return "Medium-Low"
+    return "Low"
