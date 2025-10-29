@@ -5,7 +5,7 @@ data/weekly/YYYY-Www.json  for the render step.
 """
 import os, json, glob, datetime, pandas as pd
 from src.nlp import classifier, dedup, geotag, translate
-from src.collectors import rss, telegram, api_sportal   # re-use existing collectors
+from src.collectors import rss, telegram, api_sportal, multilingual   # re-use existing collectors
 
 WEEKLY_DIR = "data/weekly"
 os.makedirs(WEEKLY_DIR, exist_ok=True)
