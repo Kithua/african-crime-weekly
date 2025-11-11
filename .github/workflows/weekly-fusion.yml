@@ -8,23 +8,37 @@ on:
 jobs:
   weekly-fusion:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ github.workspace }}   # guarantee repo-root
+
     steps:
-      # ---------- 1.  Check out repo  ----------
+      # ---------- 1.  check out repo ----------
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # ---------- 2.  Install Python  ----------
+      # ---------- 2.  python 3.11 ----------
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
           cache: 'pip'
 
-      # ---------- 3.  Install dependencies  ----------
-      - name: Install Python requirements
-        run: pip install -r requirements.txt
+      # ---------- 3.  install dependencies ----------
+      - name: Install Python packages
+        run: |
+          # CPU-only PyTorch wheel (avoids 2 GB GPU download)
+          pip install --extra-index-url https://download.pytorch.org/whl/cpu \
+                      torch==2.1.0+cpu torchvision==0.16.0+cpu torchaudio==2.1.0+cpu
+          # everything else
+          pip install -r requirements.txt
 
-      # ---------- 4.  Collate & analyse  ----------
+      # ---------- 4.  download spaCy model ----------
+      - name: Cache & install spaCy multilingual model
+        run: |
+          python -m spacy download xx_ent_wiki_sm
+
+      # ---------- 5.  run weekly collector + NLP ----------
       - name: Collate & analyse last 6 full days
         env:
           GMAIL_USER:                ${{ secrets.GMAIL_USER }}
@@ -38,11 +52,11 @@ jobs:
           python src/analyst/weekly_fusion.py
           python -m src.main
 
-      # ---------- 5.  Render artefacts  ----------
-      - name: Render HTML + PDF
+      # ---------- 6.  render PDF ----------
+      - name: Render HTML → PDF
         run: python src/render/pdf.py
 
-      # ---------- 6.  Mail the report  ----------
+      # ---------- 7.  e-mail the bundle ----------
       - name: Send e-mail
         env:
           GMAIL_USER:         ${{ secrets.GMAIL_USER }}
