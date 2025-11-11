@@ -34,9 +34,9 @@ jobs:
           pip install -r requirements.txt
 
       # ---------- 4.  download spaCy model ----------
-      - name: Cache & install spaCy multilingual model
+      - name: Install spaCy multilingual model
         run: |
-          python -m spacy download xx_ent_wiki_sm
+          pip install https://github.com/explosion/spacy-models/releases/download/xx_ent_wiki_sm-3.7.0/xx_ent_wiki_sm-3.7.0-py3-none-any.whl
 
       # ---------- 5.  run weekly collector + NLP ----------
       - name: Collate & analyse last 6 full days
