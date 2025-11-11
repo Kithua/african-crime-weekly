@@ -40,6 +40,7 @@ jobs:
 
       # ---------- 5.  run weekly collector + NLP ----------
       - name: Collate & analyse last 6 full days
+        working-directory: ${{ github.workspace }}   # <-- add this line
         env:
           GMAIL_USER:                ${{ secrets.GMAIL_USER }}
           GMAIL_APP_PASSWORD:        ${{ secrets.GMAIL_APP_PASSWORD }}
