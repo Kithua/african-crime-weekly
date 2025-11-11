@@ -52,6 +52,7 @@ jobs:
           TELEGRAM_API_HASH:         ${{ secrets.TELEGRAM_API_HASH }}
           TELEGRAM_SESSION_STRING:   ${{ secrets.TELEGRAM_SESSION_STRING }}
         run: |
+          export PYTHONPATH="${{ github.workspace }}:$PYTHONPATH"
           python src/analyst/weekly_fusion.py
           python -m src.main
 
