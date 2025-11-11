@@ -99,7 +99,7 @@ feeds:
     type: rss
     lang: pt
   
-    - name: echoroukonline.com
+  - name: echoroukonline.com
     url: https://www.echoroukonline.com/
     type: rss
     lang: ar
@@ -394,7 +394,7 @@ feeds:
     type: rss
     lang: ar
   
-    - name: lanation.bj
+  - name: lanation.bj
     url: https://lanation.bj/
     type: rss
     lang: fr
@@ -459,7 +459,7 @@ feeds:
     type: scrape
     lang: fr
   
-    - name: guardiansun.co.bw
+  - name: guardiansun.co.bw
     url: https://guardiansun.co.bw/
     type: rss
     lang: en
@@ -504,7 +504,7 @@ feeds:
     type: rss
     lang: en
   
-    - name: lobservateur.bf
+  - name: lobservateur.bf
     url: https://www.lobservateur.bf/
     type: rss
     lang: fr
@@ -1456,7 +1456,7 @@ feeds:
     type: rss
     lang: ti
   
-   - name: times.co.sz
+  - name: times.co.sz
     url: http://www.times.co.sz/
     type: rss
     lang: en
@@ -1471,7 +1471,7 @@ feeds:
     type: rss
     lang: en
   
-    - name: ethiopianreporter.com
+  - name: ethiopianreporter.com
     url: https://www.ethiopianreporter.com/
     type: rss
     lang: am
@@ -1631,7 +1631,7 @@ feeds:
     type: rss
     lang: fr
   
-    - name: foroyaa.net
+  - name: foroyaa.net
     url: https://foroyaa.net/
     type: rss
     lang: en
@@ -1953,7 +1953,7 @@ feeds:
     type: rss
     lang: pt
   
-    - name: fratmat.info
+  - name: fratmat.info
     url: https://www.fratmat.info/
     type: rss
     lang: fr
@@ -2102,7 +2102,7 @@ feeds:
     type: rss
     lang: en
     
-    - name: liberianobserver.com
+  - name: liberianobserver.com
     url: https://www.liberianobserver.com/
     type: rss
     lang: en
@@ -2157,7 +2157,7 @@ feeds:
     type: rss
     lang: en
     
-    - name: libyaakhbar.com
+  - name: libyaakhbar.com
     url: https://www.libyaakhbar.com/
     type: rss
     lang: ar
@@ -2262,7 +2262,7 @@ feeds:
     type: rss
     lang: en
   
-    - name: lexpress.mg
+  - name: lexpress.mg
     url: https://lexpress.mg/
     type: rss
     lang: fr
@@ -2332,7 +2332,7 @@ feeds:
     type: rss
     lang: fr
   
-    - name: mwnation.com
+  - name: mwnation.com
     url: https://mwnation.com/
     type: rss
     lang: en
@@ -2402,7 +2402,7 @@ feeds:
     type: rss
     lang: en
   
-    - name: lessor.ml
+  - name: lessor.ml
     url: https://lessor.ml/
     type: rss
     lang: fr
@@ -2482,7 +2482,7 @@ feeds:
     type: rss
     lang: fr
   
-    - name: lecalame.info
+  - name: lecalame.info
     url: http://www.lecalame.info/
     type: rss
     lang: fr
@@ -2642,7 +2642,7 @@ feeds:
     type: rss
     lang: fr
   
-    - name: lexpress.mu
+  - name: lexpress.mu
     url: https://lexpress.mu/
     type: rss
     lang: fr
@@ -2747,7 +2747,7 @@ feeds:
     type: rss
     lang: fr
   
-    - name: lematin.ma
+  - name: lematin.ma
     url: https://lematin.ma/
     type: rss
     lang: fr
@@ -3057,7 +3057,7 @@ feeds:
     type: rss
     lang: ar
   
-    - name: jornalnoticias.co.mz
+  - name: jornalnoticias.co.mz
     url: https://www.jornalnoticias.co.mz/
     type: rss
     lang: pt
@@ -3127,7 +3127,7 @@ feeds:
     type: rss
     lang: pt
   
-    - name: namibian.com.na
+  - name: namibian.com.na
     url: https://www.namibian.com.na/
     type: rss
     lang: en
@@ -3267,7 +3267,7 @@ feeds:
     type: rss
     lang: fr
   
-    - name: punchng.com
+  - name: punchng.com
     url: https://punchng.com/
     type: rss
     lang: en
@@ -3697,7 +3697,7 @@ feeds:
     type: rss
     lang: en
   
-    - name: newtimes.co.rw
+  - name: newtimes.co.rw
     url: https://www.newtimes.co.rw/
     type: rss
     lang: en
@@ -3797,7 +3797,7 @@ feeds:
     type: scrape
     lang: en
   
-    - name: jornaltransparencia.st
+  - name: jornaltransparencia.st
     url: http://www.jornaltransparencia.st/
     type: rss
     lang: pt
@@ -4011,7 +4011,7 @@ feeds:
     type: rss
     lang: fr
   
-    - name: nation.sc
+  - name: nation.sc
     url: https://www.nation.sc/
     type: rss
     lang: en
@@ -4110,7 +4110,7 @@ feeds:
     type: rss
     lang: en
   
-   - name: hiiraan.com
+  - name: hiiraan.com
     url: https://www.hiiraan.com/
     type: rss
     lang: en
@@ -4190,7 +4190,7 @@ feeds:
     type: rss
     lang: so 
   
-    - name: citizen.co.za
+  - name: citizen.co.za
     url: https://www.citizen.co.za/
     type: rss
     lang: en
@@ -4390,7 +4390,7 @@ feeds:
     type: rss
     lang: en
   
-    - name: newsudanvision.com
+  - name: newsudanvision.com
     url: https://www.newsudanvision.com/
     type: rss
     lang: en
@@ -4435,7 +4435,7 @@ feeds:
     type: rss
     lang: en
   
-    - name: sudaneseonline.com
+  - name: sudaneseonline.com
     url: https://sudaneseonline.com/
     type: rss
     lang: en
@@ -4898,7 +4898,7 @@ feeds:
     type: scrape
     lang: ar
   
-    - name: newvision.co.ug
+  - name: newvision.co.ug
     url: https://www.newvision.co.ug/
     type: rss
     lang: en
@@ -5014,7 +5014,7 @@ feeds:
     url: https://flashugnews.com/
     type: rss
     lang: en
-    - name: spsrasd.info
+  - name: spsrasd.info
     url: https://www.spsrasd.info/
     type: rss
     lang: ar
@@ -5050,10 +5050,12 @@ feeds:
     url: https://saharaoccidental.blogspot.com/
     type: rss
     lang: es
-    - name: lusakatimes.com
+    
+  - name: lusakatimes.com
     url: https://www.lusakatimes.com/
     type: rss
     lang: en
+    
   - name: times.co.zm
     url: https://www.times.co.zm/
     type: rss
@@ -5127,7 +5129,8 @@ feeds:
     url: http://www.lowdownzambia.com/
     type: rss
     lang: en
-    - name: heraldonline.co.zw
+    
+  - name: heraldonline.co.zw
     url: https://www.heraldonline.co.zw/
     type: rss
     lang: en
@@ -5262,5 +5265,5 @@ feeds:
     lang: en
   - name: zwnews.com
     url: https://zwnews.com/
-  type: rss
-  lang: en
+    type: rss
+    lang: en
