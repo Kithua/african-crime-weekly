@@ -16,6 +16,8 @@ jobs:
       # ---------- 1.  check out repo ----------
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          path: .          # force repo into ${{ github.workspace }}
 
       # ---------- 2.  python 3.11 ----------
       - name: Set up Python
