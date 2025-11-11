@@ -6,6 +6,7 @@ jinja2
 weasyprint==59.0
 requests
 python-dotenv
+pandas
 
 # nlp
 spacy==3.7.2
