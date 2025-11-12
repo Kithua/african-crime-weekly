@@ -1,37 +1,28 @@
-# core
-python-dateutil
-pytz
-pyyaml
-jinja2
-weasyprint==59.0
-requests
-python-dotenv
-pandas
-iso639
+# Core Dependencies
+python-dateutil==2.8.2
+pyyaml==6.0.1
+requests==2.31.0
+feedparser==6.0.10
+telethon==1.34.0
 
-# nlp
-spacy==3.7.2
-sentence-transformers==2.2.2
-transformers==4.35.0
---extra-index-url https://download.pytorch.org/whl/cpu
-torch==2.1.0+cpu
-fasttext-wheel==0.9.2
+# NLP and ML
+scikit-learn==1.3.2
+nltk==3.8.1
 langdetect==1.0.9
 
-# telegram
-telethon==1.29.3
+# Web Scraping and Discovery
+beautifulsoup4==4.12.2
+tldextract==3.6.0
+urllib3==2.0.7
 
-# rss
-feedparser==6.0.10
+# For future auto-discovery (comment out if not using yet)
+# serpapi==0.1.5
+# tweepy==4.14.0
 
-# pdf
-pypdf2==3.0.1
+# PDF Generation (optional)
+# weasyprint==60.2
 
-# email
-python-dotenv
-
-# spaCy multilingual model (direct wheel – no download needed)
-https://github.com/explosion/spacy-models/releases/download/xx_ent_wiki_sm-3.7.0/xx_ent_wiki_sm-3.7.0-py3-none-any.whl
-
-pydyf==0.6.0
-weasyprint==59.0
+# Development Tools
+pytest==7.4.3
+black==23.11.0
+flake8==6.1.0
