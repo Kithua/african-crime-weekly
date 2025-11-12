@@ -10,10 +10,47 @@ import yaml
 from pathlib import Path
 import datetime as dt
 import pytz
+from urllib3.util.retry import Retry
+from requests.adapters import HTTPAdapter
+
+# Create a session with retries
+def get_session():
+    session = requests.Session()
+    retry_strategy = Retry(
+        total=3,
+        backoff_factor=1,
+        status_forcelist=[429, 500, 502, 503, 504, 403],
+    )
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+    session.mount("http://", adapter)
+    session.mount("https://", adapter)
+    session.headers.update({
+        "User-Agent": "Mozilla/5.0 (compatible; ACW-Bot/1.0; +https://github.com/Kithua/african-crime-weekly)",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    })
+    return session
+
+# Use this session in your fetch function
+session = get_session()
+
+def fetch(start: dt.datetime, end: dt.datetime):
+    rows = []
+    whitelist = yaml.safe_load(Path("data/whitelist_multilingual.yml").read_text()).get("feeds", [])
+    
+    for feed_info in whitelist:
+        try:
+            resp = session.get(
+                feed_info["url"],
+                timeout=(10, 30),  # Increased timeout
+            )
+            resp.raise_for_status()
+            feed = feedparser.parse(resp.text)
+
+
 
 # same keywords you already use
 KEYWORDS = {
-    "terrorism": {"terror", "al-shabaab", "boko haram", "isis", "jihad", "attack", "bomb", "suicide", "kidnap", "ransom"},
+    "terrorism": {"terror", "Jama at Nusrat al-Islam wal Muslimeen", "JNIM", "Islamic State in West Africa", "ISIS-WA", "Islamic State in the Greater Sahara", "ISGS", "Rapid Support Forces", "RSF", "ADF", "M23", "al-shabaab", "boko haram", "isis", "jihad", "attack", "bomb", "suicide", "kidnap", "ransom"},
     "organised": {"drug", "cocaine", "heroin", "traffick", "smuggl", "mafia", "cartel", "mine illegal", "arms",
                   "weapon", "border", "port", "customs"},
     "financial": {"money launder", "bitcoin", "usdt", "fraud", "scam", "ponzi", "pyramid", "ofac", "sanction",
@@ -30,6 +67,8 @@ INTEL_MAP = {
 }
 
 log = logging.getLogger(__name__)
+
+
 
 def _score(text: str) -> str:
     text = text.lower()
