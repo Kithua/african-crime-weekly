@@ -46,7 +46,15 @@ def fetch(start: dt.datetime, end: dt.datetime):
             resp = requests.get(
                 feed_info["url"],
                 timeout=(5, 10),
-                headers={"User-Agent": "ACW/1.0 (+https://github.com/Kithua/african-crime-weekly)"},
+                headers=headers={
+                                    "User-Agent": "Mozilla/5.0 (compatible; ACW-Bot/1.0; +https://github.com/Kithua/african-crime-weekly)",
+                                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                                    "Accept-Language": "en-US,en;q=0.5",
+                                    "Accept-Encoding": "gzip, deflate",
+                                    "DNT": "1",
+                                    "Connection": "keep-alive",
+                                    "Upgrade-Insecure-Requests": "1",
+                                },
             )
             resp.raise_for_status()
 
