@@ -1,0 +1,66 @@
+# African Crime Weekly Configuration
+
+collection:
+  sources:
+    rss: true
+    telegram: true
+    multilingual: true
+    social_media: true
+    darkweb: true
+    gov_reports: true
+  
+  # Collection parameters
+  timeout: 30
+  max_entries_per_source: 100
+  rate_limit: 0.5
+
+credibility:
+  min_score_for_collection: 0.4
+  auto_add_threshold: 0.7
+  tier_weights:
+    A: 0.25
+    B: 0.20
+    C: 0.15
+    D: 0.10
+
+nlp:
+  enable_translation: true
+  target_language: "en"
+  enable_geotagging: true
+  enable_deduplication: true
+  deduplication_threshold: 0.85  # Cosine similarity threshold
+
+output:
+  format: "html"  # html, pdf, or both
+  email_delivery: true
+  smtp_server: "smtp.gmail.com"
+  smtp_port: 587
+
+discovery:
+  enabled: true
+  serpapi_key: "${SERPAPI_KEY}"
+  auto_discover_on_run: false
+  discovery_frequency: "daily"
+  
+  # Source type discovery
+  discover_news: true
+  discover_gov: true
+  discover_corporate: true
+  discover_leaks: true
+
+# Intelligence focus areas
+focus_areas:
+  - terrorism
+  - organised_crime
+  - financial_crime
+  - cybercrime
+  - violent_extremism
+  - transnational_crime
+
+# Geographic coverage
+regions:
+  - north_africa
+  - west_africa
+  - east_africa
+  - central_africa
+  - southern_africa
