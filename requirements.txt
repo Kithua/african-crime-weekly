@@ -9,18 +9,21 @@ telethon==1.34.0
 scikit-learn==1.3.2
 nltk==3.8.1
 langdetect==1.0.9
+spacy==3.7.2
 
 # Web Scraping and Discovery
 beautifulsoup4==4.12.2
 tldextract==3.6.0
 urllib3==2.0.7
+serpapi==0.1.5
 
-# For future auto-discovery (comment out if not using yet)
-# serpapi==0.1.5
-# tweepy==4.14.0
+# Translation
+transformers==4.35.2
+torch==2.1.1
+iso639-lang==2.1.0
 
-# PDF Generation (optional)
-# weasyprint==60.2
+# Dark Web Monitoring
+requests[socks]==2.31.0
 
 # Development Tools
 pytest==7.4.3
