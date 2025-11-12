@@ -1,32 +1,39 @@
-import feedparser, datetime as dt, pytz, yaml, re
-import logging, requests   # add at top
+"""
+Multilingual RSS collector
+- skips dead feeds instead of crashing
+"""
+import logging
+import re
+import requests
+import yaml
 from pathlib import Path
+import datetime as dt
+import pytz
 
-
-
-# pillar keywords (same as RSS / Telegram)
+# same keywords you already use
 KEYWORDS = {
     "terrorism": {"terror", "al-shabaab", "boko haram", "isis", "jihad", "attack", "bomb", "suicide", "kidnap", "ransom"},
-    "organised": {"drug", "cocaine", "heroin", "traffick", "smuggl", "mafia", "cartel", "mine illegal", "arms", "weapon", "border", "port", "customs"},
-    "financial": {"money launder", "bitcoin", "usdt", "fraud", "scam", "ponzi", "pyramid", "ofac", "sanction", "vat", "tax evasion", "forex", "investment scam", "business email"},
-    "cyber": {"ransomware", "phish", "malware", "hack", "breach", "ddos", "botnet", "zero-day", "exploit", "darkweb", "onion", "c&c", "trojan", "worm", "BEC", "threat actor"}
+    "organised": {"drug", "cocaine", "heroin", "traffick", "smuggl", "mafia", "cartel", "mine illegal", "arms",
+                  "weapon", "border", "port", "customs"},
+    "financial": {"money launder", "bitcoin", "usdt", "fraud", "scam", "ponzi", "pyramid", "ofac", "sanction",
+                  "vat", "evasion", "forex", "investment scam", "business email"},
+    "cyber": {"ransomware", "phish", "malware", "hack", "breach", "ddos", "botnet", "zero-day", "exploit",
+              "darkweb", "onion", "trojan", "worm", "c&c", "caffeine", "mrxcoder"}
 }
 
-
 INTEL_MAP = {
-    "terrorism": "Non-English reporting on regional conflict; follow for local sentiment.",
-    "organised": "References cross-border trade / ports; possible smuggling angle.",
-    "financial": "Covers banking / crypto stories; fraud or laundering angle.",
+    "terrorism": "Regional conflict reporting; follow for local sentiment.",
+    "organised": "Mentions ports / borders; potential smuggling angle.",
+    "financial": "Banking / crypto references; fraud or laundering lead.",
     "cyber": "No cyber keywords – default bucket."
 }
 
 log = logging.getLogger(__name__)
 
-def _score(txt: str) -> str:
-    txt = txt.lower()
-    scores = {p: len(kw & set(re.split(r"\W+", txt))) for p, kw in KEYWORDS.items()}
+def _score(text: str) -> str:
+    text = text.lower()
+    scores = {p: len(kw & set(re.split(r"\W+", text))) for p, kw in KEYWORDS.items()}
     return max(scores, key=scores.get) if max(scores.values()) else "cyber"
-
 
 def fetch(start: dt.datetime, end: dt.datetime):
     rows = []
