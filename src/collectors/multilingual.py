@@ -2,6 +2,7 @@
 Multilingual RSS collector
 - skips dead feeds instead of crashing
 """
+import feedparser
 import logging
 import re
 import requests
