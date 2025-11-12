@@ -5,8 +5,9 @@ from src.nlp import geotag, dedup, classifier
 from src.analyst import weekly_fusion
 from src.render import pdf, email
 
-logging.basicConfig(level=logging.INFO)
+# Add logging to debug
 log = logging.getLogger("ACW")
+logging.basicConfig(level=logging.INFO)  # Add this to see import errors
 
 
 def week_range():
