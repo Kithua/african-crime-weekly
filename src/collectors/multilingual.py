@@ -1,7 +1,4 @@
-"""
-Multilingual RSS collector
-- skips dead feeds instead of crashing
-"""
+#!/usr/bin/env python3
 import feedparser
 import logging
 import re
@@ -12,43 +9,8 @@ import datetime as dt
 import pytz
 from urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
+from typing import List, Dict, Any
 
-# Create a session with retries
-def get_session():
-    session = requests.Session()
-    retry_strategy = Retry(
-        total=3,
-        backoff_factor=1,
-        status_forcelist=[429, 500, 502, 503, 504, 403],
-    )
-    adapter = HTTPAdapter(max_retries=retry_strategy)
-    session.mount("http://", adapter)
-    session.mount("https://", adapter)
-    session.headers.update({
-        "User-Agent": "Mozilla/5.0 (compatible; ACW-Bot/1.0; +https://github.com/Kithua/african-crime-weekly)",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-    })
-    return session
-
-# Use this session in your fetch function
-session = get_session()
-
-def fetch(start: dt.datetime, end: dt.datetime):
-    rows = []
-    whitelist = yaml.safe_load(Path("data/whitelist_multilingual.yml").read_text()).get("feeds", [])
-    
-    for feed_info in whitelist:
-        try:
-            resp = session.get(
-                feed_info["url"],
-                timeout=(10, 30),  # Increased timeout
-            )
-            resp.raise_for_status()
-            feed = feedparser.parse(resp.text)
-
-
-
-# same keywords you already use
 KEYWORDS = {
     "terrorism": {"terror", "Jama at Nusrat al-Islam wal Muslimeen", "JNIM", "Islamic State in West Africa", "ISIS-WA", "Islamic State in the Greater Sahara", "ISGS", "Rapid Support Forces", "RSF", "ADF", "M23", "al-shabaab", "boko haram",
                   "isis", "jihad", "attack", "bomb", "suicide", "extremist", "militant", "insurgent"},
@@ -66,60 +28,87 @@ INTEL_MAP = {
 
 log = logging.getLogger(__name__)
 
+def get_session():
+    session = requests.Session()
+    retry_strategy = Retry(
+        total=3,
+        backoff_factor=1,
+        status_forcelist=[429, 500, 502, 503, 504, 403],
+    )
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+    session.mount("http://", adapter)
+    session.mount("https://", adapter)
+    session.headers.update({
+        "User-Agent": "Mozilla/5.0 (compatible; ACW-Bot/1.0; +https://github.com/Kithua/african-crime-weekly)",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    })
+    return session
 
+session = get_session()
 
 def _score(text: str) -> str:
     text = text.lower()
     scores = {p: len(kw & set(re.split(r"\W+", text))) for p, kw in KEYWORDS.items()}
     return max(scores, key=scores.get) if max(scores.values()) else "cyber"
 
-def fetch(start: dt.datetime, end: dt.datetime):
+def collect(start: dt.datetime, end: dt.datetime) -> List[Dict[str, Any]]:
     rows = []
-    whitelist = yaml.safe_load(Path("data/whitelist_multilingual.yml").read_text()).get("feeds", [])
-
+    whitelist_path = Path("data/whitelist_multilingual.yml")
+    
+    if not whitelist_path.exists():
+        log.warning(f"Whitelist file not found: {whitelist_path}")
+        return rows
+    
+    whitelist = yaml.safe_load(whitelist_path.read_text()).get("feeds", [])
+    
     for feed_info in whitelist:
         try:
-            # fetch with short timeout + custom UA
-            resp = requests.get(
-                feed_info["url"],
-                timeout=(5, 10),
-                headers=headers={
-                                    "User-Agent": "Mozilla/5.0 (compatible; ACW-Bot/1.0; +https://github.com/Kithua/african-crime-weekly)",
-                                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-                                    "Accept-Language": "en-US,en;q=0.5",
-                                    "Accept-Encoding": "gzip, deflate",
-                                    "DNT": "1",
-                                    "Connection": "keep-alive",
-                                    "Upgrade-Insecure-Requests": "1",
-                                },
+            url = feed_info["url"]
+            log.info(f"Fetching multilingual RSS: {url}")
+            
+            resp = session.get(
+                url,
+                timeout=(10, 30),
             )
             resp.raise_for_status()
-
-            # parse only if we got text
+            
             feed = feedparser.parse(resp.text)
-
-        except Exception as exc:
-            log.warning("Bad feed %s : %s", feed_info["url"], exc)
-            continue   # <-- skip this feed, keep going
-
-        # existing extraction logic
-        for entry in feed.entries:
-            try:
-                pub = dt.datetime(*entry.published_parsed[:6], tzinfo=pytz.UTC)
-            except (AttributeError, TypeError):
+            
+            if feed.bozo:
+                log.warning(f"RSS parse error for {url}: {feed.bozo_exception}")
                 continue
-            if start <= pub <= end:
-                text = (entry.title or "") + " " + (entry.summary or "")
-                pillar = _score(text)
-                rows.append({
-                    "title": entry.title,
-                    "summary": entry.summary,
-                    "url": entry.link,
-                    "date": pub.isoformat(),
-                    "source": feed_info["url"],
-                    "tier": feed_info.get("tier", "B"),
-                    "lang": feed_info["lang"],
-                    "intel_sentence": INTEL_MAP[pillar],
-                })
-
+            
+            for entry in feed.entries:
+                try:
+                    if hasattr(entry, "published_parsed") and entry.published_parsed:
+                        pub = dt.datetime(*entry.published_parsed[:6], tzinfo=pytz.UTC)
+                    elif hasattr(entry, "updated_parsed") and entry.updated_parsed:
+                        pub = dt.datetime(*entry.updated_parsed[:6], tzinfo=pytz.UTC)
+                    else:
+                        continue
+                    
+                    if start <= pub <= end:
+                        text = (entry.title or "") + " " + (entry.summary or "")
+                        pillar = _score(text)
+                        
+                        rows.append({
+                            "title": entry.title,
+                            "summary": entry.summary,
+                            "link": entry.link,
+                            "date": pub.isoformat(),
+                            "source": url,
+                            "tier": feed_info.get("tier", "B"),
+                            "lang": feed_info.get("lang", "en"),
+                            "intel_sentence": INTEL_MAP[pillar],
+                            "pillar": pillar
+                        })
+                except Exception as e:
+                    log.warning(f"Error processing multilingual entry: {e}")
+                    continue
+                    
+        except Exception as e:
+            log.warning(f"Failed to fetch feed {feed_info.get('url')}: {e}")
+            continue
+    
+    log.info(f"Multilingual collection complete: {len(rows)} articles")
     return rows
