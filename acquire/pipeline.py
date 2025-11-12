@@ -70,9 +70,11 @@ class AutoSourcePipeline:
         # Trusted base domains for seeding
         self.trusted_domains = {
             "news": ["bbc.com", "reuters.com", "apnews.com", "aljazeera.com", "africanews.com"],
-            "security": ["icct.nl", "globalinitiative.net", "issafrica.org", "sant.ox.ac.uk"],
+            "security": ["icct.nl", "globalinitiative.net", "issafrica.org", "sant.ox.ac.uk", "frontex.europa.eu","start.umd.edu","unodc.org", "english.news.cn","hiiraan.com","adf-magazine.com", "afrique-sur7.fr", "gnet-research.org", "economicsandpeace.org", "issafrica.org",
+                         "enactafrica.org", "iom.int"],
             "gov": [".gov", ".gouv", ".go.tz", ".go.ke", ".gov.ng", ".gov.za"],
-            "financial": ["fatf-gafi.org", "worldbank.org", "imf.org"]
+            "cyber": ["dashboard.shadowserver.org"],
+            "financial": ["fatf-gafi.org", "worldbank.org", "imf.org", "sanctionslist.ofac.treas.gov"]
         }
         
     def run_daily_discovery(self):
