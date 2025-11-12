@@ -50,13 +50,11 @@ def fetch(start: dt.datetime, end: dt.datetime):
 
 # same keywords you already use
 KEYWORDS = {
-    "terrorism": {"terror", "Jama at Nusrat al-Islam wal Muslimeen", "JNIM", "Islamic State in West Africa", "ISIS-WA", "Islamic State in the Greater Sahara", "ISGS", "Rapid Support Forces", "RSF", "ADF", "M23", "al-shabaab", "boko haram", "isis", "jihad", "attack", "bomb", "suicide", "kidnap", "ransom"},
-    "organised": {"drug", "cocaine", "heroin", "traffick", "smuggl", "mafia", "cartel", "mine illegal", "arms",
-                  "weapon", "border", "port", "customs"},
-    "financial": {"money launder", "bitcoin", "usdt", "fraud", "scam", "ponzi", "pyramid", "ofac", "sanction",
-                  "vat", "evasion", "forex", "investment scam", "business email"},
-    "cyber": {"ransomware", "phish", "malware", "hack", "breach", "ddos", "botnet", "zero-day", "exploit",
-              "darkweb", "onion", "trojan", "worm", "c&c", "caffeine", "mrxcoder"}
+    "terrorism": {"terror", "Jama at Nusrat al-Islam wal Muslimeen", "JNIM", "Islamic State in West Africa", "ISIS-WA", "Islamic State in the Greater Sahara", "ISGS", "Rapid Support Forces", "RSF", "ADF", "M23", "al-shabaab", "boko haram",
+                  "isis", "jihad", "attack", "bomb", "suicide", "extremist", "militant", "insurgent"},
+    "organised": {"drug", "cocaine", "heroin", "traffick", "smuggl", "mafia", "cartel", "mine illegal", "arms", "weapon", "border", "port", "customs", "kidnap", "ransom", "organized crime"},
+    "financial": {"money launder", "bitcoin", "usdt", "fraud", "scam", "ponzi", "pyramid", "ofac", "sanction", "nft", "evasion", "forex", "investment scam", "dnfbp"},
+    "cyber": {"ransomware", "phish", "malware", "hack", "breach", "ddos", "botnet", "zero-day", "exploit", "darkweb", "onion", "trojan", "worm", "c&c", "pig butchering", "romance scam"}
 }
 
 INTEL_MAP = {
