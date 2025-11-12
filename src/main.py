@@ -3,6 +3,7 @@ from pathlib import Path
 from src.collectors import rss, telegram, api_sportal, multilingual
 from src.nlp import geotag, dedup, classifier
 from src.analyst import weekly_fusion
+from src.analyst import weekly_fusion_intel_style
 from src.render import pdf, email
 
 # Add logging to debug
